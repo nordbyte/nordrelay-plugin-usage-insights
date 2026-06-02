@@ -1,0 +1,46 @@
+{
+  "name": "@nordbyte/nordrelay-usage-insights",
+  "version": "0.1.0",
+  "description": "Token usage and estimated cost analytics plugin for NordRelay sessions across peers.",
+  "type": "module",
+  "homepage": "https://github.com/nordbyte/nordrelay-plugin-usage-insights#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/nordbyte/nordrelay-plugin-usage-insights.git"
+  },
+  "bugs": {
+    "url": "https://github.com/nordbyte/nordrelay-plugin-usage-insights/issues"
+  },
+  "main": "./index.js",
+  "files": [
+    "index.js",
+    "src",
+    "nordrelay.plugin.json",
+    "README.md",
+    "LICENSE"
+  ],
+  "scripts": {
+    "check": "node --check index.js && node --check src/runtime.js && node --check src/storage.js && node --check src/pricing.js && node --check src/render-panel.js && node --check src/format.js && node --check src/commands.js",
+    "test": "node --test test/*.test.mjs",
+    "prepack": "npm run check && npm test"
+  },
+  "keywords": [
+    "nordrelay",
+    "plugin",
+    "usage",
+    "tokens",
+    "costs",
+    "analytics"
+  ],
+  "author": "Ricardo <github@nordbyte.de>",
+  "license": "MIT",
+  "engines": {
+    "node": ">=22"
+  },
+  "optionalDependencies": {
+    "better-sqlite3": "^11.0.0"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}

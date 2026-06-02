@@ -1,0 +1,150 @@
+{
+  "id": "usage-insights",
+  "name": "Usage Insights",
+  "version": "0.1.0",
+  "description": "Tracks token usage and estimated model costs across sessions, providers, models, and NordRelay peers.",
+  "author": "Ricardo <github@nordbyte.de>",
+  "homepage": "https://github.com/nordbyte/nordrelay-plugin-usage-insights",
+  "repository": "https://github.com/nordbyte/nordrelay-plugin-usage-insights",
+  "license": "MIT",
+  "nordrelay": ">=0.9.17",
+  "entry": "index.js",
+  "permissions": [
+    "runtime.read",
+    "usage.read",
+    "peers.read",
+    "network"
+  ],
+  "capabilities": {
+    "collectors": [
+      {
+        "id": "usage.collect",
+        "title": "Collect usage",
+        "description": "Samples normalized NordRelay session usage on this node and stores cumulative and delta usage.",
+        "intervalMs": 60000,
+        "runOnStart": true,
+        "timeoutMs": 30000
+      }
+    ],
+    "commands": [
+      {
+        "name": "collect",
+        "title": "Collect usage",
+        "description": "Collect and persist one usage snapshot from the local node.",
+        "timeoutMs": 30000
+      },
+      {
+        "name": "panel-data",
+        "title": "Panel data",
+        "description": "Return token, provider, model, node, session, and time-range summaries.",
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "range": {
+              "type": "string",
+              "title": "Range",
+              "default": "7d"
+            }
+          }
+        },
+        "timeoutMs": 30000
+      },
+      {
+        "name": "refresh-prices",
+        "title": "Refresh model prices",
+        "description": "Fetch the latest public model price catalog and store supported model rates.",
+        "timeoutMs": 120000
+      },
+      {
+        "name": "price-catalog",
+        "title": "Price catalog",
+        "description": "Return configured and fetched model price rules.",
+        "timeoutMs": 10000
+      },
+      {
+        "name": "export",
+        "title": "Export usage",
+        "description": "Export usage deltas as JSON or CSV.",
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "format": {
+              "type": "string",
+              "title": "Format",
+              "default": "json"
+            },
+            "range": {
+              "type": "string",
+              "title": "Range",
+              "default": "30d"
+            }
+          }
+        },
+        "timeoutMs": 30000
+      },
+      {
+        "name": "cleanup",
+        "title": "Cleanup old usage",
+        "description": "Delete usage delta rows older than the configured retention window.",
+        "timeoutMs": 30000
+      },
+      {
+        "name": "storage-health",
+        "title": "Storage health",
+        "description": "Return SQLite storage health for Usage Insights.",
+        "timeoutMs": 10000
+      }
+    ],
+    "webPanels": [
+      {
+        "id": "dashboard",
+        "title": "Usage Insights",
+        "aggregateCommand": "panel-data",
+        "allowClientScript": true,
+        "placement": "monitor",
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "range": {
+              "type": "string",
+              "title": "Range",
+              "default": "7d"
+            }
+          }
+        },
+        "timeoutMs": 30000
+      }
+    ],
+    "diagnostics": true
+  },
+  "settings": [
+    {
+      "key": "priceCatalogUrl",
+      "label": "Price catalog URL",
+      "type": "string",
+      "default": "https://raw.githubusercontent.com/BerriAI/litellm/main/model_prices_and_context_window.json",
+      "description": "Remote model price catalog. LiteLLM's public catalog includes input, output, cached input, and cache creation fields for many models."
+    },
+    {
+      "key": "autoRefreshPrices",
+      "label": "Auto refresh prices",
+      "type": "boolean",
+      "default": true,
+      "description": "Refresh the remote price catalog when it is stale."
+    },
+    {
+      "key": "priceRefreshHours",
+      "label": "Price refresh hours",
+      "type": "number",
+      "default": 24,
+      "description": "How long fetched model prices stay fresh."
+    },
+    {
+      "key": "retentionDays",
+      "label": "Retention days",
+      "type": "number",
+      "default": 365,
+      "description": "Usage delta retention window."
+    }
+  ]
+}
