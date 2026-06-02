@@ -23,7 +23,7 @@ unpriced until a matching price rule is available.
 Install from the NordRelay marketplace, or manually:
 
 ```sh
-nordrelay plugin install npm:@nordbyte/nordrelay-usage-insights --enable --approve-permissions
+nordrelay plugin install npm:@nordbyte/nordrelay-usage-insights --enable --approve
 ```
 
 Required permissions:
